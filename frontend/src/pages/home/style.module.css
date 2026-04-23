@@ -1,0 +1,151 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.mainBlock {
+    display: flex;
+}
+
+
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 350px;
+    background-color: #F4F3EA;
+    border-right: 1px solid black;
+}
+
+.navHeader{
+    display: flex;
+    flex-direction: row;
+    height: 66px;
+    width: 100%;
+    background-color: #E6E4E0;
+    border-bottom: 1px solid black;
+}
+
+.profilePicture{
+    margin: 8px;
+    height: 50px;
+    width: 50px;
+    background-color: #4D4B4B;
+}
+
+.navSigns {
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    margin: 8px;
+    margin-left: 0px;
+    justify-content: space-between;
+}
+
+.userName {
+    color: #4D4B4B;
+}
+
+.locationsList {
+    display: flex;
+    flex-direction: row;
+    padding: 3px;
+    background-color: #898989;
+    width: 260px;
+    justify-content: space-between;
+    border: 1px solid black;
+}
+
+.locationsSearch {
+    color: #E6E4E0;
+}
+
+.arrowImg {
+    background-color: #E6E4E0;
+    height: 20px;
+    width: 20px;
+}
+
+
+
+.deviceList{
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    width: 100%;
+    padding: 14px;
+    gap: 12px;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.device{
+    display: flex;
+    flex-direction: row;
+    background-color: #E6E4E0;
+    border: 1px solid black;
+    width: 320px;
+    height: 75px;
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+    align-items: center;
+    padding: 8px;
+    gap: 10px;
+}
+
+.deviceImg {
+    background-color: #4D4B4B;
+    width: 56px;
+    height: 56px;
+    /* border-radius: 10px;  */
+}
+
+.deviceText {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    gap: 5px
+
+}
+
+.deviceName {
+    font-weight: bold
+}
+
+.deviceSubs {
+    font-size: 14px;
+}
+
+.deviceStatus {
+    display: flex;
+    width: 20px;
+    margin-left: auto;
+    align-self: flex-start;
+
+}
+
+
+
+
+
+
+.vidgets {
+    display: grid;
+    grid-template-columns: repeat(3, 250px); 
+    justify-content: center;
+    gap: 15px; 
+    padding: 40px;
+    height: 100vh;
+    width: calc(100% - 350px);
+    background-color: #F4F3EA;
+    
+}
+
+.vidget {
+    background-color: #E6E4E0;
+    border: 1px solid black;
+    height: 300px;
+    width: 220px;
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+}

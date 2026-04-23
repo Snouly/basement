@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'EpilepsySans';
+    src: url('src/shared/assets/fonts/EpilepsySans.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'EpilepsySans', sans-serif;
+    font-size: 16px;
+    color: #4D4B4B;
+}
