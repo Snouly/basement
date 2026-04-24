@@ -126,6 +126,20 @@
 }
 
 
+.addDeviceButton{
+    text-align: center;
+    width: 320px;
+    background-color: #E6E4E0;
+    border: 1px solid black;
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+
 
 
 
@@ -147,5 +161,15 @@
     border: 1px solid black;
     height: 300px;
     width: 220px;
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+}
+
+.vidgetSetingsButton{
+    position: absolute;
+    justify-self: end;
+    background-color: #E6E4E0;
+    border: 1px solid black;
+    height: 30px;
+    width: 30px;
     box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
 }
