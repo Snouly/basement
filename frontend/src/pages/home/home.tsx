@@ -3,6 +3,8 @@ import '../../shared/assets/styles/global.css'
 import { debugFunc } from '../../shared/lib/debugUtils';
 import { useEffect, useState } from 'react';
 import deviceOnIcon from '../../shared/assets/images/icons/deviceOn.svg';
+import deviceOffIcon from '../../shared/assets/images/icons/deviceOff.svg';
+import deviceLoadIcon from '../../shared/assets/images/icons/deviceLoad.svg';
 
 const API_URL = 'http://localhost:3001';
 
@@ -11,6 +13,7 @@ type Device = {
     name: string;
     type: string;
     location: string;
+    isOn?: boolean;
 };
 
 const deviceTypeNames: Record<string, string> = {
@@ -26,6 +29,8 @@ const Devices = () => {
     const [deviceType, setDeviceType] = useState('light');
     const [isLoading, setIsLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
+    const [deletingDeviceId, setDeletingDeviceId] = useState<number | null>(null);
+    const [togglingDeviceId, setTogglingDeviceId] = useState<number | null>(null);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -100,6 +105,55 @@ const Devices = () => {
         }
     };
 
+    const handleDeleteDevice = async (id: number) => {
+        if (deletingDeviceId !== null) return;
+
+        try {
+            setError('');
+            setDeletingDeviceId(id);
+
+            const response = await fetch(`${API_URL}/devices/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Не удалось удалить устройство');
+            }
+
+            setDevices((currentDevices) => currentDevices.filter((device) => device.id !== id));
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Не удалось удалить устройство');
+        } finally {
+            setDeletingDeviceId(null);
+        }
+    };
+
+    const handleToggleDevice = async (id: number) => {
+        if (togglingDeviceId !== null) return;
+
+        try {
+            setError('');
+            setTogglingDeviceId(id);
+
+            const response = await fetch(`${API_URL}/devices/${id}/toggle`, {
+                method: 'PATCH',
+            });
+
+            if (!response.ok) {
+                throw new Error('Не удалось изменить состояние устройства');
+            }
+
+            const updatedDevice = await response.json();
+            setDevices((currentDevices) => currentDevices.map((device) => (
+                device.id === id ? updatedDevice : device
+            )));
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Не удалось изменить состояние устройства');
+        } finally {
+            setTogglingDeviceId(null);
+        }
+    };
+
     return(
         <div className={styles.deviceList}>
                     {isLoading && <div className={styles.deviceMessage}>Загрузка устройств...</div>}
@@ -115,7 +169,25 @@ const Devices = () => {
                                     {deviceTypeNames[device.type] ?? device.type}
                                 </div>
                             </div>
-                            <img className={styles.deviceStatus} src={deviceOnIcon} alt="Устройство включено" />
+                            <button
+                                className={styles.deleteDeviceButton}
+                                onClick={() => handleDeleteDevice(device.id)}
+                                disabled={deletingDeviceId === device.id}
+                                title="Удалить устройство"
+                            >
+                            </button>
+                            <button
+                                className={styles.deviceStatusButton}
+                                onClick={() => handleToggleDevice(device.id)}
+                                disabled={togglingDeviceId === device.id}
+                                title={(device.isOn ?? true) ? 'Выключить устройство' : 'Включить устройство'}
+                            >
+                                <img
+                                    className={styles.deviceStatus}
+                                    src={togglingDeviceId === device.id ? deviceLoadIcon : (device.isOn ?? true) ? deviceOnIcon : deviceOffIcon}
+                                    alt={(device.isOn ?? true) ? 'Устройство включено' : 'Устройство выключено'}
+                                />
+                            </button>
                         </div>
                     ))}
                     

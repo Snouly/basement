@@ -120,9 +120,47 @@
 .deviceStatus {
     display: flex;
     width: 20px;
+}
+
+.deviceStatusButton {
+    display: flex;
+    width: 20px;
+    height: 46px;
     margin-left: auto;
     align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
+.deviceStatusButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.deleteDeviceButton {
+    align-self: flex-start;
+    width: 16px;
+    height: 18px;
+    background-color: #E6E4E0;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    line-height: 16px;
+    transition: 0.2s;
+
+    background-image: url(../../shared/assets/images/icons/trash.svg);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.deleteDeviceButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .deviceMessage,

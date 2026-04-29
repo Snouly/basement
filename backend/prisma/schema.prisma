@@ -12,5 +12,5 @@ model Device {
   name      String
   type      String
   location  String
+  isOn      Boolean @default(true)
 }
-

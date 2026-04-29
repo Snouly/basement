@@ -54,6 +54,53 @@ app.post('/devices', async (req, res) => {
   }
 });
 
+app.patch('/devices/:id/toggle', async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ message: 'Некорректный id устройства' });
+  }
+
+  try {
+    const device = await prisma.device.findUnique({
+      where: { id }
+    });
+
+    if (!device) {
+      return res.status(404).json({ message: 'Устройство не найдено' });
+    }
+
+    const updatedDevice = await prisma.device.update({
+      where: { id },
+      data: {
+        isOn: !device.isOn
+      }
+    });
+
+    res.json(updatedDevice);
+  } catch (error) {
+    res.status(500).json({ message: 'Не удалось изменить состояние устройства' });
+  }
+});
+
+app.delete('/devices/:id', async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ message: 'Некорректный id устройства' });
+  }
+
+  try {
+    await prisma.device.delete({
+      where: { id }
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(404).json({ message: 'Устройство не найдено' });
+  }
+});
+
 app.listen(3001, () => {
   console.log('Гнусный сервер запущен на http://localhost:3001');
 });
