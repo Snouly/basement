@@ -1,57 +1,158 @@
 import styles from './style.module.css'
-import React from 'react';  
 import '../../shared/assets/styles/global.css'
-import { debugFunc, isDebugOn } from '../../shared/lib/debugUtils';
-import { use, useState, type ChangeEvent } from 'react';
+import { debugFunc } from '../../shared/lib/debugUtils';
+import { useEffect, useState } from 'react';
+import deviceOnIcon from '../../shared/assets/images/icons/deviceOn.svg';
 
+const API_URL = 'http://localhost:3001';
+
+type Device = {
+    id: number;
+    name: string;
+    type: string;
+    location: string;
+};
+
+const deviceTypeNames: Record<string, string> = {
+    light: 'Свет',
+    kettle: 'Чайник',
+    socket: 'Розетка',
+};
 
 const Devices = () => {
-    const handleClick = (event: MouseEvent) => {
-        // тут написать функцию открывающую окошко с добавлением девайса
+    const [isOpen, setIsOpen] = useState(false);
+    const [devices, setDevices] = useState<Device[]>([]);
+    const [deviceName, setDeviceName] = useState('');
+    const [deviceType, setDeviceType] = useState('light');
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAdding, setIsAdding] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const loadDevices = async () => {
+            try {
+                const response = await fetch(`${API_URL}/devices`);
+
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить устройства');
+                }
+
+                const loadedDevices = await response.json();
+                setDevices(loadedDevices);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Не удалось загрузить устройства');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadDevices();
+    }, []);
+
+    const handleClickOpen = () => {
+        setIsOpen(!isOpen);
         debugFunc('click on add button', 'debug')
-    }
+    };
+    
+    const closeModal = () => {
+        setIsOpen(false);
+    };
 
-    // const {messages, addMessage} = useMessages(useShallow(state=>({
-    //     messages: state.messages,
-    //     addMessage: state.addMessage
-    // })))
+    const handleAddDevice = async () => {
+        if (isAdding) return;
 
-    // const handleAddDevice = () => {
-    //     if (message.trim() !== '') {
-    //         addMessage({
-    //             messageId: uuidv4(), 
-    //             chatId: uuidv4(), 
-    //             isSenderYou: true, 
-    //             messageSenderId: `убери это ---> ${uuidv4()}`, 
-    //             messageText: message,  
-    //             messageSendTime: `${dayjs().format('HH:mm')}`
-    //         })
-    //         setMessage("")
+        const trimmedName = deviceName.trim();
 
-    //         if (textareaRef.current) {
-    //             textareaRef.current.focus();
-    //         }
+        if (!trimmedName) {
+            setError('Введите название устройства');
+            return;
+        }
 
-    //         debugFunc('message sended', 'debug')
-    //     }
-    // }
+        try {
+            setError('');
+            setIsAdding(true);
+
+            const response = await fetch(`${API_URL}/devices`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: trimmedName,
+                    type: deviceType,
+                    location: 'home',
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Не удалось добавить устройство');
+            }
+
+            const createdDevice = await response.json();
+            setDevices((currentDevices) => [...currentDevices, createdDevice]);
+            setDeviceName('');
+            setDeviceType('light');
+            closeModal();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Не удалось добавить устройство');
+        } finally {
+            setIsAdding(false);
+        }
+    };
 
     return(
         <div className={styles.deviceList}>
-                    <div className={styles.device}>
-                        <div className={styles.deviceImg}></div>
-                        <div className={styles.deviceText}>
-                            <div className={styles.deviceName}>Название устройства</div>
-                            <div className={styles.deviceSubs}>Описание устройства</div>
+                    {isLoading && <div className={styles.deviceMessage}>Загрузка устройств...</div>}
+                    {!isLoading && devices.length === 0 && (
+                        <div className={styles.deviceMessage}>Устройств пока нет</div>
+                    )}
+                    {devices.map((device) => (
+                        <div className={styles.device} key={device.id}>
+                            <div className={styles.deviceImg}></div>
+                            <div className={styles.deviceText}>
+                                <div className={styles.deviceName}>{device.name}</div>
+                                <div className={styles.deviceSubs}>
+                                    {deviceTypeNames[device.type] ?? device.type}
+                                </div>
+                            </div>
+                            <img className={styles.deviceStatus} src={deviceOnIcon} alt="Устройство включено" />
                         </div>
-                        <img className={styles.deviceStatus} src='src\shared\assets\images\icons\deviceOn.svg'></img>
-                    </div>
+                    ))}
                     
                     <div 
                         className={styles.addDeviceButton} 
-                        onClick={handleClick}>
+                        onClick={handleClickOpen}>
                             +
                     </div>
+                    {isOpen && (
+                            <div className={styles.modal}>
+                                <h3>Добавить устройство</h3>
+
+                                <input
+                                    placeholder="Название"
+                                    value={deviceName}
+                                    onChange={(event) => setDeviceName(event.target.value)}
+                                />
+
+                                <select
+                                    value={deviceType}
+                                    onChange={(event) => setDeviceType(event.target.value)}
+                                >
+                                    <option value="light">Свет</option>
+                                    <option value="kettle">Чайник</option>
+                                    <option value="socket">Розетка</option>
+                                </select>
+
+                                {error && <div className={styles.deviceError}>{error}</div>}
+
+                                <button className={styles.modalButton} onClick={handleAddDevice} disabled={isAdding}>
+                                    {isAdding ? 'Добавляю...' : 'Добавить'}
+                                </button>
+                                <button className={styles.modalButton} onClick={closeModal}>
+                                    Закрыть
+                                </button>                            
+                            </div>
+                    )}
                 </div>
     )
 

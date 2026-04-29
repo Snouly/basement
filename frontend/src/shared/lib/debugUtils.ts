@@ -1,6 +1,8 @@
 const debugMode = import.meta.env.VITE_DEBUG === 'true'
 
-export const debugFunc = (debugMess: string, method: keyof Console = 'log') => {
+type DebugMethod = 'log' | 'info' | 'warn' | 'error' | 'debug';
+
+export const debugFunc = (debugMess: string, method: DebugMethod = 'log') => {
     if (debugMode) {
         console[method](debugMess);
     }
