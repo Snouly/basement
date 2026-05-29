@@ -188,6 +188,7 @@
     
     cursor: pointer;
     transition: 0.2s;
+    font: inherit;
 }
 
 .addDeviceButton:hover {
@@ -296,6 +297,8 @@
     height: 100vh;
     width: calc(100% - 350px);
     background-color: #F4F3EA;
+    position: relative;
+    overflow: auto;
     
 }
 
@@ -305,14 +308,193 @@
     height: 300px;
     width: 220px;
     box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
 }
 
 .vidgetSetingsButton{
     position: absolute;
+    top: 10px;
+    right: 10px;
     justify-self: end;
     background-color: #E6E4E0;
     border: 1px solid black;
     height: 30px;
     width: 30px;
     box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 3;
+    font: inherit;
+}
+
+.vidgetSetingsButton:hover {
+    background-color: #d6d4d0;
+}
+
+.widgetSettingsMenu {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 300px;
+    background-color: #E6E4E0;
+    border: 1px solid black;
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 4;
+}
+
+.widgetSettingsMenu label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.widgetSettingsMenu select,
+.widgetField input,
+.widgetSelect,
+.presetCreator input {
+    padding: 6px;
+    border: 1px solid black;
+    background-color: white;
+    font-size: 14px;
+    outline: none;
+    min-width: 0;
+}
+
+.modalActions {
+    display: flex;
+    gap: 8px;
+}
+
+.widgetHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.widgetStatusOn,
+.widgetStatusOff {
+    border: 1px solid black;
+    height: 24px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    background-color: #d6ead5;
+}
+
+.widgetStatusOff {
+    background-color: #e5d5d5;
+}
+
+.widgetControls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+}
+
+.widgetField {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.widgetField input[type="range"] {
+    padding: 0;
+}
+
+.brightnessRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 50px;
+    gap: 10px;
+    align-items: end;
+}
+
+.widgetPrimaryButton,
+.widgetSmallButton {
+    background-color: #F4F3EA;
+    border: 1px solid black;
+    box-shadow: 3px 3px 4px rgba(0,0,0,0.18);
+    padding: 6px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.widgetPrimaryButton:hover,
+.widgetSmallButton:hover {
+    background-color: #d6d4d0;
+}
+
+.widgetPrimaryButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.presetCreator {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    gap: 6px;
+}
+
+.widgetSmallButton {
+    box-shadow: none;
+    padding: 6px 4px;
+    font-size: 12px;
+}
+
+.colorButton {
+    width: 50px;
+    height: 38px;
+    border: 1px solid black;
+    cursor: pointer;
+    box-shadow: 3px 3px 4px rgba(0,0,0,0.18);
+}
+
+.colorPicker {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.widgetLogs {
+    background-color: #4D4B4B;
+    border: 1px solid black;
+    color: #F4F3EA;
+    min-height: 58px;
+    max-height: 76px;
+    padding: 6px;
+    overflow: auto;
+    scrollbar-width: none;
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.widgetLogItem {
+    margin-bottom: 4px;
+}
+
+.widgetLogEmpty,
+.widgetEmpty {
+    color: #898989;
+}
+
+.widgetEmpty {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px dashed #898989;
 }
